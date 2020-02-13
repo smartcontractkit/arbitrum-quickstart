@@ -1,0 +1,86 @@
+version: "3.7"
+
+x-chainlink-def:
+    &chainlink-def
+    image: smartcontract/chainlink:ethdenver
+    restart: on-failure
+    secrets:
+        - cl_node_password
+        - cl_apicredentials
+    env_file: ./env.chainlink-node
+    command: 'node start -d -p /run/secrets/cl_node_password -a /run/secrets/cl_apicredentials'
+
+x-postgres-def:
+    &postgres-def
+    image: postgres
+    restart: on-failure
+    environment:
+        - "POSTGRES_CREATE_DATABASES=chainlink"
+
+services:
+    chainlink-node:
+        <<: *chainlink-def
+        depends_on:
+            - chainlink-postgres
+        ports:
+            - "6688:6688"
+        environment:
+            - "DATABASE_URL=postgresql://chainlink@ethdenver_chainlink-postgres_1:5432/chainlink?sslmode=disable"
+            - "ROOT=/chainlink"
+            - "LOG_LEVEL=debug"
+            - "MIN_OUTGOING_CONFIRMATIONS=2"
+            - "CHAINLINK_TLS_PORT=0"
+            - "SECURE_COOKIES=false"
+            - "ALLOW_ORIGINS=*"
+            - "CHAINLINK_DEV=true"
+        networks:
+            - arbitrum
+        volumes:
+            - "chainlink:/chainlink"
+
+    chainlink-postgres:
+        <<: *postgres-def
+        networks:
+            - arbitrum
+        volumes:
+            - "./docker-init-scripts:/docker-entrypoint-initdb.d"
+            - "postgres:/var/lib/postgresql/data"
+
+
+    bridge-adapter:
+        image: smartcontract/arbitrum-adapter:latest
+        env_file: ./env.bridge-adapter
+        environment:
+            - "VALIDATOR_URL=http://arbitrum-validator:1235"
+        networks:
+            - arbitrum
+        expose:
+            - "8080"
+
+    arbitrum-validator:
+        image: smartcontract/arbitrum-validator-ethdenver:latest
+        env_file: ./env.arbitrum-validator
+        volumes:
+            - ./contracts-offchain/contracts:/validator/contract-compiler/contracts
+            - ./contracts-offchain/migrations:/validator/contract-compiler/migrations
+        networks:
+            - arbitrum
+        expose:
+            - "1235"
+            - "1236"
+
+networks:
+    arbitrum:
+
+secrets:
+    cl_node_password:
+        file: ./secrets/cl_node_password.txt
+    cl_apicredentials:
+        file: ./secrets/cl_apicredentials
+
+volumes:
+    postgres:
+    chainlink:
+
+
+

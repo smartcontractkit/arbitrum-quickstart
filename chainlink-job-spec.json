@@ -1,0 +1,22 @@
+{
+    "initiators": [{ "type": "runlog", "params": {} }],
+    "tasks": [
+        { "type": "httpGet", "params": { "url": "https://min-api.cryptocompare.com/data/blockchain/histo/day?fsym=BTC&api_key=..." } },
+        { "type": "jsonParse", "params": { "path": ["Data", "Data", "0"] } },
+        {
+            "type": "ethTxAbiEncode",
+            "params": {
+                "functionABI": {
+                    "name": "getSmallTransactionCount",
+                    "inputs": [
+                        { "name": "transaction_count", "type": "uint256" },
+                        { "name": "large_transaction_count", "type": "uint256" }
+                    ]
+                }
+             }
+        },
+        { "type": "arbitrum", "params": { "contractAddress": "0x895521964D724c8362A36608AAf09A3D7d0A0445" } },
+        { "type": "ethTx" }
+    ]
+}
+
