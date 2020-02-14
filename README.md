@@ -20,7 +20,7 @@
     - Deploy the contracts: `truffle migrate --network rinkeby`
     - Write down the Oracle contract's deployed address -- you'll need it in the next step.
 
-2. Open `adapter.env`, `validator.env`, and `chainlink.env`, and follow the instructions, adding
+2. Open `env.bridge-adapter`, `env.arbitrum-validator`, and `env.chainlink-node`, and follow the instructions, adding
 values for `ETH_URL`, `PRIVATE_KEY`, etc.  Make sure to add the `ORACLE_CONTRACT_ADDRESS` value
 that you received when you deployed the Chainlink Oracle contract.
 
