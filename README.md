@@ -19,7 +19,7 @@ The goal of this example is to show how a Chainlink request can be made for an o
     - Open `variables.js` and add the following values:
         - `MNEMONIC_OR_PRIVATE_KEY` for the Ethereum account you'll be using
         - `ETH_URL` for the Ethereum node you'll be communicating with
-    - Deploy the contracts: `truffle migrate --network rinkeby`
+    - Deploy the contracts: `truffle migrate --network <rinkeby|ropsten|kovan>`
     - Write down the Oracle contract's deployed address -- you'll need it in the next step.
 
 2. Open `adapter.env`, `validator.env`, and `chainlink.env`, and follow the instructions, adding
@@ -43,8 +43,8 @@ ready when it begins to emit logs such as the following:
 
 5. Find the Chainlink node's Ethereum address in the log output.
     - Open `contracts-chainlink/variables.js` and set the `CHAINLINK_NODE_ADDR` variable.
-    - Run `truffle exec scripts/fund-node.js`.
-    - Run `truffle exec scripts/authorize-node.js`.
+    - Run `truffle exec --network <rinkeby|ropsten|kovan> scripts/fund-node.js`.
+    - Run `truffle exec --network <rinkeby|ropsten|kovan> scripts/authorize-node.js`.
 
 6. Open the Chainlink Operator UI at <http://localhost:6688> and log in.
     - **Username:** notreal@fakeemail.ch
@@ -152,14 +152,14 @@ run the following commands:
 
 ```sh
 cd contracts-chainlink
-truffle exec ./scripts/fund-contract.js
+truffle exec --network <rinkeby|ropsten|kovan> ./scripts/fund-contract.js
 ```
 
 Once that transaction is mined, you can use another helper script to issue requests to the Chainlink oracle node:
 
 ```sh
 cd contracts-chainlink
-truffle exec ./scripts/request-data.js
+truffle exec --network <rinkeby|ropsten|kovan> ./scripts/request-data.js
 ```
 
 Once the Chainlink node completes the job, it will send a transaction back to the `MyDataConsumer` contract with
@@ -167,5 +167,5 @@ the response.  To read that response, you can run the final helper script:
 
 ```sh
 cd contracts-chainlink
-truffle exec ./scripts/read-contract.js
+truffle exec --network <rinkeby|ropsten|kovan> ./scripts/read-contract.js
 ```
