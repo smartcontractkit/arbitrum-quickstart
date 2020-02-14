@@ -1,15 +1,17 @@
-
-
 # Chainlink + Arbitrum: off-chain computation development guide
+
+This repository allows you to run Chainlink and Arbitrum Docker images together so that contract execution may occur off-chain. The Chainlink node needs to know about the Arbitrum container via a Bridge. A bridge is simply how the Chainlink node communicates with external adapters, which is the role that the Arbitrum container is fulfilling. The quick start guide will assist you with setting up an end-to-end environment demonstrating all components of this use-case.
+
+The goal of this example is to show how a Chainlink request can be made for an off-chain computation of a Solidity contract within the Arbitrum execution environment. Chainlink node operators can run Arbitrum to perform smart contract execution off-chain. This is beneficial when the cost of that computation would be significantly higher to execute it on-chain, while still retaining the same high degree of security.
 
 ## Prerequisites
 
 - Docker
 - docker-compose
 - Node.js (10.x.x or higher)
+- Truffle
 
 ## Quick start
-
 
 1. Deploy the on-chain Chainlink contracts:
     - Navigate to the `contracts-chainlink` directory
@@ -31,13 +33,13 @@ spin up fairly quickly.  The Arbitrum validator service will take longer, becaus
 it recompiles the off-chain contract, deploys it to the validator, and also deploys a new on-chain
 rollup contract to track the off-chain computation results.  You will know that the validator is
 ready when it begins to emit logs such as the following:
+
     ```
     validator_1        | 2020/02/12 22:53:54
     validator_1        | == nodes:
     validator_1        | ==   0:4c2ced leaf latestConfirmed
     validator_1        | == stakers:
     ```
-
 
 5. Find the Chainlink node's Ethereum address in the log output.
     - Open `contracts-chainlink/variables.js` and set the `CHAINLINK_NODE_ADDR` variable.
@@ -119,7 +121,6 @@ ready when it begins to emit logs such as the following:
     Once you create the job, it will be assigned a Job ID (a hex string).  Take this ID, open `contracts-chainlink/variables.js`,
     and set the `JOB_ID` variable.
 
-
 ## Development workflow
 
 ### On-chain data requester contract
@@ -168,6 +169,3 @@ the response.  To read that response, you can run the final helper script:
 cd contracts-chainlink
 truffle exec ./scripts/read-contract.js
 ```
-
-
-
