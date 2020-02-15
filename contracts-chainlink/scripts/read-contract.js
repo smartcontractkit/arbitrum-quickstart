@@ -8,5 +8,5 @@ const MyDataConsumer = artifacts.require('MyDataConsumer')
 module.exports = async callback => {
   const mdc = await MyDataConsumer.deployed()
   const data = await mdc.data.call()
-  callback(data)
+  callback('The result is: ' + data + '\n\n')
 }

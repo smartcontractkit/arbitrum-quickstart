@@ -1,7 +1,7 @@
 {
     "initiators": [{ "type": "runlog", "params": {} }],
     "tasks": [
-        { "type": "httpGet", "params": { "url": "https://min-api.cryptocompare.com/data/blockchain/histo/day?fsym=BTC&api_key=..." } },
+        { "type": "httpGet", "params": { "url": "https://min-api.cryptocompare.com/data/blockchain/histo/day?fsym=BTC&api_key=cdbdeeefba85b0174dc243a7de70c24c9f64ad52e92dcfcc56a77b418a049a83" } },
         { "type": "jsonParse", "params": { "path": ["Data", "Data", "0"] } },
         {
             "type": "ethTxAbiEncode",

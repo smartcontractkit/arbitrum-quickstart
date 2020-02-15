@@ -20,12 +20,13 @@ x-postgres-def:
 services:
     chainlink-node:
         <<: *chainlink-def
+        container_name: ethdenver_chainlink-node
         depends_on:
             - chainlink-postgres
         ports:
             - "6688:6688"
         environment:
-            - "DATABASE_URL=postgresql://chainlink@ethdenver_chainlink-postgres_1:5432/chainlink?sslmode=disable"
+            - "DATABASE_URL=postgresql://postgres@ethdenver_chainlink-postgres:5432/postgres?sslmode=disable"
             - "ROOT=/chainlink"
             - "LOG_LEVEL=debug"
             - "MIN_OUTGOING_CONFIRMATIONS=2"
@@ -40,14 +41,15 @@ services:
 
     chainlink-postgres:
         <<: *postgres-def
+        container_name: ethdenver_chainlink-postgres
         networks:
             - arbitrum
         volumes:
-            - "./docker-init-scripts:/docker-entrypoint-initdb.d"
             - "postgres:/var/lib/postgresql/data"
 
 
     bridge-adapter:
+        container_name: ethdenver_bridge-adapter
         image: smartcontract/arbitrum-adapter:latest
         env_file: ./env.bridge-adapter
         environment:
@@ -58,6 +60,7 @@ services:
             - "8080"
 
     arbitrum-validator:
+        container_name: ethdenver_arbitrum-validator
         image: smartcontract/arbitrum-validator-ethdenver:latest
         env_file: ./env.arbitrum-validator
         volumes:
