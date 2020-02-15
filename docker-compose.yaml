@@ -12,7 +12,7 @@ x-chainlink-def:
 
 x-postgres-def:
     &postgres-def
-    image: postgres
+    image: "postgres:11.7"
     restart: on-failure
     environment:
         - "POSTGRES_CREATE_DATABASES=chainlink"
@@ -26,7 +26,7 @@ services:
         ports:
             - "6688:6688"
         environment:
-            - "DATABASE_URL=postgresql://postgres@ethdenver_chainlink-postgres:5432/postgres?sslmode=disable"
+            - "DATABASE_URL=postgresql://postgres:postgres@ethdenver_chainlink-postgres:5432/postgres?sslmode=disable"
             - "ROOT=/chainlink"
             - "LOG_LEVEL=debug"
             - "MIN_OUTGOING_CONFIRMATIONS=2"
@@ -42,6 +42,8 @@ services:
     chainlink-postgres:
         <<: *postgres-def
         container_name: ethdenver_chainlink-postgres
+        environment:
+            - "POSTGRES_PASSWORD=postgres"
         networks:
             - arbitrum
         volumes:
